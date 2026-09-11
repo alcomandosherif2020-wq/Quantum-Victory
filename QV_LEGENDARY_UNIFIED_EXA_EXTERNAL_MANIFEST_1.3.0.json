@@ -1,0 +1,51 @@
+{
+  "project": "كوانتوم فيكتوري للتحليل الفني والكمي للبورصة المصرية",
+  "artifact": "QV_LEGENDARY_UNIFIED_EXA_EXTERNAL",
+  "version": "1.3.0",
+  "operating_model": "OFFLINE_FILE_FIRST",
+  "primary_source": "officially_downloaded_EGX_session_files",
+  "storage_layers": [
+    "session_inbox",
+    "immutable_hash_archive",
+    "normalized_evidence_index",
+    "QV_analysis_outputs",
+    "project_brain_and_library_links"
+  ],
+  "integrations": [
+    "QV internal source mesh",
+    "QV historical evidence",
+    "QV Unified Signal Orchestrator",
+    "EXA",
+    "Twelve Data",
+    "EODHD",
+    "Alpha Vantage",
+    "FMP",
+    "yfinance",
+    "Telegram",
+    "GitHub/Streamlit"
+  ],
+  "policy": {
+    "live_market_required": false,
+    "archived_files_may_drive_analysis": true,
+    "external_sources_are_corroboration": true,
+    "production_authorized": false,
+    "fail_closed": true,
+    "synthetic_data": false,
+    "snapshot_claimed_as_live": false
+  },
+  "tests": {
+    "full_pytest": "177 passed",
+    "compileall": "PASS",
+    "offline_smoke": "PASS"
+  },
+  "zip": {
+    "path": "/mnt/data/qv_build/QV_LEGENDARY_UNIFIED_EXA_EXTERNAL_1.3.0.zip",
+    "sha256": "4de7b25d52d9921bfa871b125077ac239ebc4c4fa449ac7694732ae56dab2ced",
+    "size": 2965459
+  },
+  "wrapper": {
+    "path": "/mnt/data/qv_build/Nafezu-كوانتوم-فيكتوري-5.9.4-LEGENDARY-OFFLINE-FILE-FIRST-1.3.0.py",
+    "sha256": "09b7b126a813d253a1138c5e2571b2b4616fd88d4119dc884359cdd84ae69209",
+    "size": 3954810
+  }
+}
