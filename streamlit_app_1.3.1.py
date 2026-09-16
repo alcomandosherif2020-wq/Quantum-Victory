@@ -97,6 +97,36 @@ if isinstance(data, pd.DataFrame) and not data.empty:
 
 st.subheader("5) المبدأ التشغيلي")
 st.markdown(
+    # --- إضافة نظام التحليل الكمي المتقدم (Quantum Victory Diamond v13.0) ---
+st.subheader("6) تقرير التحليل الكمي المتقدم — الأصول المستهدفة")
+st.caption("مخرجات المحرك الكمي الآلي (TMGH, SWDY, MFPC, ETEL) بناءً على بيانات السوق والتقييم العادل.")
+
+quant_report_path = ROOT / "qv_output" / "quantitative_analysis_report.json"
+
+if quant_report_path.exists():
+    try:
+        q_data = json.loads(quant_report_path.read_text(encoding="utf-8"))
+        st.success(f"تم تحميل تقرير المحرك الكمي بنجاح (الإصدار: {q_data.get('engine_version', 'v13.0')})")
+        
+        assets = q_data.get("portfolio_assets", [])
+        if assets:
+            for asset in assets:
+                with st.expander(f"📌 {asset['ticker']} — {asset['name']} ({asset['sector']})"):
+                    q_col1, q_col2, q_col3 = st.columns(3)
+                    q_col1.metric("السعر الحالي", f"{asset['current_price_egp']} ج.م")
+                    q_col2.metric("السعر العادل", f"{asset['fair_value_egp']} ج.م")
+                    q_col3.metric("مكرر الربحية P/E", asset['pe_ratio'])
+                    
+                    st.write(f"**الزخم الشرائي:** {asset['momentum']}")
+                    st.write(f"**التركيز الاستراتيجي:** {asset['focus']}")
+                    st.write(f"**التوصية الكمية:** {asset['recommendation']}")
+        else:
+            st.info("لا توجد أصول مسجلة حالياً في التقرير.")
+    except Exception as e:
+        st.error(f"حدث خطأ أثناء قراءة تقرير التحليل الكمي: {e}")
+else:
+    st.warning("ملف تقرير التحليل الكمي غير موجود حالياً في مسار `qv_output`. يرجى التأكد من تشغيل الـ Action لتوليده.")
+    
     """
 - **الملف الرسمي المحفوظ هو الدليل الأساسي للجلسة.**
 - يتم حفظ الأصل وبصمته SHA-256 قبل التحليل.
