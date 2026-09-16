@@ -1,97 +1,28 @@
 name: QV Legendary Continuous Paper
 
 on:
+  push:
+    branches: [ main ]
   workflow_dispatch:
-  schedule:
-    - cron: "0 7 * * 0-4"
-
-permissions:
-  contents: read
 
 jobs:
   qv-paper:
     runs-on: ubuntu-latest
-
-    env:
-      QV_MODE: paper
-      QV_FAIL_CLOSED: "true"
-      QV_NO_LOOKAHEAD: "true"
-      QV_PRODUCTION_AUTHORIZED: "false"
-
     steps:
-      - name: Checkout Quantum Victory
+      - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Setup Python 3.12
+      - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
+          python-version: '3.12'
 
-      - name: Verify repository
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-          import json
-          import hashlib
-          from datetime import datetime, timezone
+      - name: Run Quantitative Analysis Engine
+        run: python qv_quant_analyzer.py
 
-          root = Path(".")
-          py_files = sorted(root.rglob("*.py"))
-
-          workflow_dir = root / ".github" / "workflows"
-
-          report = {
-              "engine": "QV-LEGENDARY-CONTINUOUS-PAPER",
-              "timestamp_utc": datetime.now(timezone.utc).isoformat(),
-              "mode": "paper",
-              "fail_closed": True,
-              "no_lookahead": True,
-              "production_authorized": False,
-              "python_files": len(py_files),
-              "workflow_files": len(list(workflow_dir.glob("*.yml"))) +
-                                len(list(workflow_dir.glob("*.yaml"))),
-              "files": [str(p) for p in py_files],
-          }
-
-          payload = json.dumps(
-              report,
-              ensure_ascii=False,
-              sort_keys=True
-          ).encode("utf-8")
-
-          report["report_sha256"] = hashlib.sha256(payload).hexdigest()
-
-          out = Path("qv_output")
-          out.mkdir(exist_ok=True)
-
-          (out / "repository_audit.json").write_text(
-              json.dumps(report, ensure_ascii=False, indent=2),
-              encoding="utf-8"
-          )
-
-          print(json.dumps(report, ensure_ascii=False, indent=2))
-          PY
-
-      - name: Python syntax gate
-        run: |
-          python -m compileall -q .
-
-      - name: Production safety gate
-        run: |
-          echo "QV_MODE=${QV_MODE}"
-          echo "QV_FAIL_CLOSED=${QV_FAIL_CLOSED}"
-          echo "QV_NO_LOOKAHEAD=${QV_NO_LOOKAHEAD}"
-          echo "QV_PRODUCTION_AUTHORIZED=${QV_PRODUCTION_AUTHORIZED}"
-
-          test "${QV_MODE}" = "paper"
-          test "${QV_FAIL_CLOSED}" = "true"
-          test "${QV_NO_LOOKAHEAD}" = "true"
-          test "${QV_PRODUCTION_AUTHORIZED}" = "false"
-
-      - name: Upload QV audit
+      - name: Upload Analysis Report Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: qv-paper-audit
-          path: qv_output/
-          if-no-files-found: error
+          name: qv-quantitative-report
+          path: qv_output/quantitative_analysis_report.json
           
