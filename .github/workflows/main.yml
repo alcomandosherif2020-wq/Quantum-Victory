@@ -1,10 +1,10 @@
-name: QV Legendary Continuous Paper
+Name: QV Legendary Continuous Paper
 
 on:
   workflow_dispatch:
 
   schedule:
-    - cron: "20 14 * * 0-4"
+    - cron: "0 7 * * 0-4"
 
 permissions:
   contents: read
@@ -95,3 +95,4 @@ jobs:
           name: qv-paper-audit
           path: qv_output/
           if-no-files-found: error
+          
